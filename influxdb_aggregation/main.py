@@ -1,9 +1,12 @@
 #!/usr/bin/env python
+import logging
 
 from influxdb import InfluxDBClient
 
-from conf import config
-import templating as tpl
+from influxdb_aggregation.conf import config
+from influxdb_aggregation import templating as tpl
+
+logger = logging.getLogger(__name__)
 
 
 def get_database_state(client, db_config):
@@ -84,18 +87,18 @@ def process_database(db_config):
 
     for policy in policy_info:
         if policy not in existing_policies:
-            print("Creating {}".format(policy))
+            logger.info("Creating {}".format(policy))
             client.query(policy_info[policy]["create"])
         else:
             current = existing_policies[policy]
             desired = policy_info[policy]
             if current["duration"] != desired["retention"]:
-                print("Updating policy {}".format(policy))
+                logger.info("Updating policy {}".format(policy))
                 client.query(desired["update"])
 
     for policy in existing_policies:
         if policy not in policy_info:
-            print("Deleting policy {}".format(policy))
+            logger.info("Deleting policy {}".format(policy))
             query = "DROP RETENTION POLICY \"{}\" ON \"{}\"".format(
                 policy, db_config['database']
             )
@@ -103,7 +106,7 @@ def process_database(db_config):
 
     for query in query_info:
         if query not in existing_queries:
-            print("Creating query {}".format(query))
+            logger.info("Creating query {}".format(query))
             client.query(query_info[query]["query"])
 
     for query in existing_queries:
@@ -111,7 +114,7 @@ def process_database(db_config):
             current = existing_queries[query]
             desired = query_info[query]
             if current != desired["query"]:
-                print("Re-Creating query {}".format(query))
+                logger.info("Re-Creating query {}".format(query))
                 client.query(
                     "DROP CONTINUOUS QUERY {} ON {}"
                         .format(query, db_config['database']))

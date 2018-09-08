@@ -53,8 +53,8 @@ policy_update_template: |
   REPLICATION {replication}
   SHARD DURATION {shard_duration}
   
-policy_name_template: rollup_{rollup}
-query_name_template: {measurement}_{policy}
+policy_name_template: "rollup_{rollup}"
+query_name_template: "{measurement}_{policy}"
   
 configs:
   - database: prometheus
@@ -87,7 +87,7 @@ def update_config(configuration, server_base, config_data):
     for key in ['default_policy', 'database', 'host', 'port',
                 'desired_policies', 'configs']:
         if key in config_data:
-            server_base[key] = config_data
+            server_base[key] = config_data[key]
 
 
 def make_db_configs(configuration, server_base):

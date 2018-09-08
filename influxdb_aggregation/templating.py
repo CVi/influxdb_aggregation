@@ -1,6 +1,6 @@
 import re
 
-from conf import config
+from influxdb_aggregation.conf import config
 
 __all__ = ['policy_name', 'policy_query', 'policy_update_query',
            'continuous_query_name', 'continuous_query_create']
