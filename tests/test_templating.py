@@ -26,7 +26,7 @@ class TemplatingTests(unittest.TestCase):
     def test_strip_query(self):
         q = """
         SELECT * FROM  Query
-        NOT IMPORTANT   Only 
+        NOT IMPORTANT   Only
         whitespace;
         """
 

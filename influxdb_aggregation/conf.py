@@ -27,9 +27,9 @@ desired_policies:
     shard_duration: 2w
 
 continuous_query_template: |
-  SELECT 
-    mean(value) AS value, 
-    max(value) AS max_value, 
+  SELECT
+    mean(value) AS value,
+    max(value) AS max_value,
     min(value) AS min_value
   INTO {database}.{policy}.{measurement}
   FROM {database}.input.{measurement}
@@ -37,25 +37,25 @@ continuous_query_template: |
 
 create_continuous_query_template: |
   CREATE CONTINUOUS QUERY {measurement}_{policy} ON {database}
-  BEGIN 
+  BEGIN
     {query}
   END
 
 policy_template: |
-  CREATE RETENTION POLICY {policy} ON {database} 
+  CREATE RETENTION POLICY {policy} ON {database}
   DURATION {retention}
   REPLICATION {replication}
   SHARD DURATION {shard_duration}
-  
+
 policy_update_template: |
-  ALTER RETENTION POLICY  {policy} ON {database} 
+  ALTER RETENTION POLICY  {policy} ON {database}
   DURATION {retention}
   REPLICATION {replication}
   SHARD DURATION {shard_duration}
-  
+
 policy_name_template: "rollup_{rollup}"
 query_name_template: "{measurement}_{policy}"
-  
+
 configs:
   - database: prometheus
     host: 127.0.0.1
@@ -64,7 +64,7 @@ configs:
       # Default variables can be overridden on database level
       shard_duration: 1h
     # Defaults to global if not set.
-    # desired_policies: 
+    # desired_policies:
 """
 
 
@@ -78,9 +78,9 @@ def update_config(configuration, server_base, config_data):
     :param server_base: Server intermediate configuration dictionary
     :param config_data: Source data
     """
-    for key in ['continuous_query_template', 'create_continuous_query_template',
-                'policy_update_template', 'policy_name_template',
-                'query_name_template', 'policy_template']:
+    for key in ['continuous_query_template', 'policy_update_template',
+                'create_continuous_query_template', 'policy_template',
+                'policy_name_template', 'query_name_template']:
         if key in config_data:
             configuration[key] = config_data[key]
 

@@ -3,8 +3,8 @@ import logging
 
 from influxdb import InfluxDBClient
 
-from influxdb_aggregation.conf import config
 from influxdb_aggregation import templating as tpl
+from influxdb_aggregation.conf import config
 
 logger = logging.getLogger(__name__)
 
@@ -117,14 +117,10 @@ def process_database(db_config):
                 logger.info("Re-Creating query {}".format(query))
                 client.query(
                     "DROP CONTINUOUS QUERY {} ON {}"
-                        .format(query, db_config['database']))
+                    "".format(query, db_config['database']))
                 client.query(desired["query"])
 
 
-def main():
+if __name__ == '__main__':
     for db_config in config['configs']:
         process_database(db_config)
-
-
-if __name__ == '__main__':
-    main()
